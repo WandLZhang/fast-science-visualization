@@ -44,9 +44,13 @@ const M = {
 
 function buildStaticNodes(data: AllResources | null): Node[] {
   const nodes: Node[] = [];
-  const prefix = data?.config?.prefix || 'prefix';
-  const primary = data?.config?.regions?.primary || 'us-central1';
+  const prefix = data?.config?.prefix || '';
+  const primary = data?.config?.regions?.primary || '';
   const secondary = data?.config?.regions?.secondary;
+  const hasVdss = data?.config?.hasVdss ?? false;
+  const hubProject = data?.config?.hubProject;
+  const spokeProject = data?.config?.spokeProject;
+  const subnets = (data?.config as any)?.subnets || {};
   const hubInstances = data?.hub?.instances || [];
   const hubNats = data?.hub?.nats || [];
   const hubFwdRules = data?.hub?.forwardingRules || [];
@@ -54,6 +58,11 @@ function buildStaticNodes(data: AllResources | null): Node[] {
   const nvaStatus = hubInstances.some(i => i.tags?.includes('nva') && i.state === 'running') ? 'active' : 'pending';
   const natStatus = hubNats.length > 0 ? 'active' : 'pending';
   const ilbStatus = hubFwdRules.length > 0 ? 'active' : 'pending';
+
+  // Build subnet display strings from discovered data
+  const subnetEntries = Object.entries(subnets) as [string, any][];
+  const primarySubnets = subnetEntries.filter(([, s]) => s.region === primary);
+  const secondarySubnets = secondary ? subnetEntries.filter(([, s]) => s.region === secondary) : [];
 
   // ─── Compute dynamic heights bottom-up ───
   const vpcContentH = secondary
@@ -114,7 +123,7 @@ function buildStaticNodes(data: AllResources | null): Node[] {
     id: 'g-hub', type: 'groupNode',
     parentNode: 'g-l0',
     position: { x: M.GROUP_PAD, y: hubY },
-    data: { label: 'Hub Project', icon: 'cloud', width: 1360, height: hubH, groupType: 'project', subtitle: `${prefix}-net-vdss-host` },
+    data: { label: 'Hub Project', icon: 'cloud', width: 1360, height: hubH, groupType: 'project', subtitle: hubProject || `${prefix}-net-vdss-host` },
     draggable: false, selectable: false,
   });
 
@@ -205,7 +214,7 @@ function buildStaticNodes(data: AllResources | null): Node[] {
     id: 'g-spoke', type: 'groupNode',
     parentNode: 'g-l0',
     position: { x: M.GROUP_PAD, y: spokeY },
-    data: { label: 'Spoke Project', icon: 'cloud', width: 1360, height: spokeH, groupType: 'project', subtitle: `${prefix}-prod-net-host` },
+    data: { label: 'Spoke Project', icon: 'cloud', width: 1360, height: spokeH, groupType: 'project', subtitle: spokeProject || `${prefix}-prod-net-host` },
     draggable: false, selectable: false,
   });
 
@@ -223,7 +232,7 @@ function buildStaticNodes(data: AllResources | null): Node[] {
     id: 'spoke-primary', type: 'resource',
     parentNode: 'g-spoke-vpc',
     position: { x: M.GROUP_PAD, y: M.GROUP_TOP },
-    data: { label: 'Primary Subnet', subtitle: `${primary}/default-primary-region — 10.202.0.0/16`, icon: 'dns', status: 'active' },
+    data: { label: 'Primary Subnet', subtitle: primarySubnets.length > 0 ? `${primarySubnets[0][0]} — ${primarySubnets[0][1].cidr}` : `${primary}/default`, icon: 'dns', status: 'active' },
   });
 
   if (secondary) {
@@ -231,7 +240,7 @@ function buildStaticNodes(data: AllResources | null): Node[] {
       id: 'spoke-secondary', type: 'resource',
       parentNode: 'g-spoke-vpc',
       position: { x: 460, y: M.GROUP_TOP },
-      data: { label: 'Secondary Subnet', subtitle: `${secondary}/default-secondary-region — 10.203.0.0/16`, icon: 'dns', status: 'active' },
+      data: { label: 'Secondary Subnet', subtitle: secondarySubnets.length > 0 ? `${secondarySubnets[0][0]} — ${secondarySubnets[0][1].cidr}` : `${secondary}/default`, icon: 'dns', status: 'active' },
     });
   }
 
@@ -418,10 +427,11 @@ const InfraFlowInner: React.FC = () => {
       // Use fallback static data for demo
       setData({
         config: {
-          orgId: '', domain: '', prefix: 'wzuniv',
-          hubProject: 'wzuniv-net-vdss-host',
-          spokeProject: 'wzuniv-prod-net-host',
-          workloadProjects: ['wzuniv-pathology-medsiglip'],
+          orgId: '', domain: '', prefix: 'demo',
+          hubProject: 'demo-net-vdss-host',
+          spokeProject: 'demo-prod-net-host',
+          workloadProjects: ['demo-workload-1'],
+          hasVdss: true,
           regions: { primary: 'us-central1', secondary: 'us-west1' },
         },
         hierarchy: { orgId: '', domain: '', folders: [] },

@@ -65,29 +65,39 @@ export interface OrgHierarchy {
   folders: FolderInfo[];
 }
 
+export interface SubnetDetail {
+  id: string;
+  cidr: string;
+  region: string;
+  name: string;
+  env: string;
+}
+
 export interface InfraConfig {
   orgId: string;
   domain: string;
   prefix: string;
-  hubProject: string;
-  spokeProject: string;
+  hubProject: string | null;
+  spokeProject: string | null;
   workloadProjects: string[];
-  regions: { primary: string; secondary?: string };
+  hasVdss: boolean;
+  regions: { primary: string; secondary?: string | null };
+  subnets?: Record<string, SubnetDetail>;
 }
 
 export interface AllResources {
   config: InfraConfig;
-  hierarchy: OrgHierarchy;
+  hierarchy?: OrgHierarchy;
   hub: {
     networks: VpcNetwork[];
     instances: ComputeInstance[];
     forwardingRules: ForwardingRule[];
     nats: CloudNat[];
-  };
+  } | null;
   spoke: {
     networks: VpcNetwork[];
     subnets: SubnetInfo[];
-  };
+  } | null;
   workloads: Record<string, {
     project: ProjectInfo;
     instances: ComputeInstance[];
