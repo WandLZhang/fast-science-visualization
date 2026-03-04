@@ -1,0 +1,47 @@
+.infra-flow-wrapper {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-container-low);
+}
+
+.infra-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-outline-variant);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.infra-content {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.flow-container {
+  flex: 1;
+  min-width: 0;
+}
+
+.detail-sidebar {
+  width: 340px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--color-outline-variant);
+  background: var(--color-surface);
+  animation: slideInRight var(--duration-medium2) var(--easing-emphasized-decelerate);
+}

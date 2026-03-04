@@ -1,0 +1,86 @@
+.group-node {
+  border-radius: 20px;
+  position: relative;
+  pointer-events: none;
+}
+
+/* IT group — blue */
+.group-node.group-it {
+  background: rgba(26, 115, 232, 0.04);
+  border: 1.5px solid rgba(26, 115, 232, 0.15);
+}
+.group-it .group-icon, .group-it .group-text { color: #1A73E8; }
+
+/* Researcher group — teal */
+.group-node.group-researcher {
+  background: rgba(13, 192, 157, 0.04);
+  border: 1.5px solid rgba(13, 192, 157, 0.15);
+}
+.group-researcher .group-icon, .group-researcher .group-text { color: #0DC09D; }
+
+/* Project boundary — amber */
+.group-node.group-project {
+  background: rgba(251, 188, 4, 0.03);
+  border: 1.5px solid rgba(251, 188, 4, 0.2);
+}
+.group-project .group-icon, .group-project .group-text { color: #E37400; }
+
+/* VPC boundary — purple */
+.group-node.group-vpc {
+  background: rgba(123, 31, 162, 0.03);
+  border: 1.5px solid rgba(123, 31, 162, 0.15);
+}
+.group-vpc .group-icon, .group-vpc .group-text { color: #7B1FA2; }
+
+/* Region boundary */
+.group-node.group-region {
+  background: rgba(95, 99, 104, 0.02);
+  border: 1.5px solid rgba(95, 99, 104, 0.12);
+}
+.group-region .group-icon, .group-region .group-text { color: #5F6368; }
+
+/* Layer box (L0, L1, L2) */
+.group-node.group-layer {
+  background: rgba(95, 99, 104, 0.02);
+  border: 1.5px solid rgba(95, 99, 104, 0.1);
+}
+.group-layer .group-icon, .group-layer .group-text { color: #5F6368; }
+
+/* Dashed variant for secondary/optional regions */
+.group-node.group-dashed {
+  border-style: dashed;
+}
+
+.group-label {
+  position: absolute;
+  left: 16px;
+  top: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.group-icon {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+.group-text {
+  font-family: 'Google Sans Text', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.group-subtitle {
+  font-family: 'Google Sans Text', sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  opacity: 0.6;
+  text-transform: none;
+  letter-spacing: 0;
+}

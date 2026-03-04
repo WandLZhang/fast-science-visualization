@@ -1,0 +1,6 @@
+flask>=3.0
+flask-cors>=4.0
+google-cloud-asset>=3.24
+google-cloud-resource-manager>=1.12
+google-cloud-storage>=2.14
+google-auth>=2.28
